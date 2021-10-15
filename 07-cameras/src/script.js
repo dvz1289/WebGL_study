@@ -15,8 +15,6 @@ window.addEventListener('mousemove', (event) =>
 {
     cursor.x = event.clientX / sizes.width - 0.5
     cursor.y = - (event.clientY / sizes.height - 0.5)
-
-
 })
 
 /**
@@ -27,9 +25,50 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Sizes
 const sizes = {
-    width: 800,
-    height: 600
+    // set viewport fit
+    width: window.innerWidth,
+    height: window.innerHeight
+
+    // set specified size
+    // width: 800,
+    // height: 600
 }
+
+// Resize Updating
+window.addEventListener('resize', () =>
+{
+    // Update sizes
+    sizes.width = window.innerWidth
+    sizes.height = window.innerHeight
+
+    // Update camera
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
+
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+// Fullscreen use double click
+window.addEventListener('dblclick', () => 
+{
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+
+    if(!fullscreenElement){
+        if(canvas.requestFullscreen){
+            canvas.requestFullscreen()
+        }else if(canvas.webkitFullscreenElement){
+            canvas.webkitFullscreenElement()
+        }
+    }else{
+        if(document.exitFullscreen){
+            document.exitFullscreen()
+        }else if(document.webkitExitFullscreen){
+            document.webkitExitFullscreen
+        }
+    }
+})
 
 // Scene
 const scene = new THREE.Scene()
@@ -64,7 +103,6 @@ scene.add(camera)
  * Controls
  */
  const controls = new OrbitControls(camera, canvas)
-
 //  physics moving(soft move)
  controls.enableDamping = true
 
@@ -73,6 +111,7 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 // Animate
 const clock = new THREE.Clock()
