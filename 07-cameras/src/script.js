@@ -2,13 +2,69 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Color } from 'three'
-import asap from 'gsap'
 import * as dat from 'dat.gui'
 import gsap from 'gsap/all'
 
 /**
- * Debug - hide/show button 'h'
+ * Textures
  */
+// const image = new Image()
+// const texture = new THREE.Texture(image)
+
+// image.onload = () => {
+//     texture.needsUpdate = true
+// }
+
+// image.src = '/textures/door/color.jpg'
+
+// const textureLoader = new THREE.TextureLoader()
+// const texture = textureLoader.load('/textures/door/color.jpg')
+
+const loadingManager = new THREE.LoadingManager()
+
+// loadingManager.onStart = () => {
+//     console.log('onStart')
+// }
+// loadingManager.onLoaded = () => {
+//     console.log('onLoaded')
+// }
+// loadingManager.onProgress = () => {
+//     console.log('onProgress')
+// }
+// loadingManager.onError = () => {
+//     console.log('onError')
+// }
+
+const textureLoader = new THREE.TextureLoader(loadingManager)
+
+const colorTexture = textureLoader.load('/textures/minecraft.png')
+// const colorTexture = textureLoader.load('/textures/checkerboard-8x8.png')
+// const colorTexture = textureLoader.load('/textures/door/color.jpg')
+const alpahTexture = textureLoader.load('/textures/door/alpha.jpg')
+const heightTexture = textureLoader.load('/textures/door/height.jpg')
+const normalTexture = textureLoader.load('/textures/door/normal.jpg')
+const ambientOcculusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const metalnessTexture  = textureLoader.load('/textures/door/metalness.jpg')
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+
+// colorTexture.repeat.x = 2
+// colorTexture.repeat.y = 3
+// colorTexture.wrapS = THREE.MirroredRepeatWrapping
+// colorTexture.wrapT = THREE.MirroredRepeatWrapping
+
+// colorTexture.offset.x = 0.5
+// colorTexture.offset.y = 0.5
+
+// colorTexture.rotation = Math.PI / 4
+// colorTexture.center.x = 0.5
+// colorTexture.center.y = 0.5
+
+// colorTexture.minFilter = THREE.NearestFilter
+colorTexture.magFilter = THREE.NearestFilter // good performence
+
+// /**
+//  * Debug - hide/show button 'h'
+//  */
 const gui = new dat.GUI({ closed: true, width: 400 })
 
 
@@ -91,6 +147,7 @@ window.addEventListener('dblclick', () =>
 const scene = new THREE.Scene()
 
 // Object
+// *** Don't use buffer geometry ***
 // box geometry
 /*
 const mesh = new THREE.Mesh(
@@ -98,8 +155,9 @@ const mesh = new THREE.Mesh(
     new THREE.MeshBasicMaterial({ color: 0xff0000 })
 )
 */
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: parameters.color})
+const geometry = new THREE.BoxBufferGeometry(1, 1, 1)
+console.log(geometry.attributes.uv)
+const material = new THREE.MeshBasicMaterial({ map: colorTexture })
 const mesh = new THREE.Mesh(geometry, material)
 
 // buffer geometry
