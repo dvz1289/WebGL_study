@@ -26,86 +26,13 @@ dracoLoader.setDecoderPath('/draco/')
 const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
-/*
-gltfLoader.load(
-    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
-    (gltf) =>
-    {
-        // scene.add(gltf.scene.children[0])
-
-        // ** wrong
-        // for(const child of gltf.scene.children){
-        //     scene.add(child)
-        // }
-
-        // Solution - 1
-        // while(gltf.scene.children.length){
-        //     scene.add(gltf.scene.children[0])
-        // }
-
-        // Solution - 2
-        // const children = [...gltf.scene.children]
-        // for(const child of children){
-        //     scene.add(child)
-        // }
-
-        // Solution - 3
-        scene.add(gltf.scene)
-    }
-)
-
-gltfLoader.load(
-    '/models/Duck/glTF-Draco/Duck.gltf',
-    (gltf) =>
-    {
-        scene.add(gltf.scene)
-    }
-)
-*/
-
 let mixer = null
-let mixer2 = null
-let mixer3 = null
 
 gltfLoader.load(
-    '/models/Fox/glTF/Fox.gltf',
+    '/models/hamburger.glb',
     (gltf) =>
     {
-        gltf.scene.scale.set(0.025, 0.025, 0.025),
         scene.add(gltf.scene)
-
-        mixer = new THREE.AnimationMixer(gltf.scene)
-        const action = mixer.clipAction(gltf.animations[0])
-
-        action.play()
-    }
-)
-gltfLoader.load(
-    '/models/Fox/glTF/Fox.gltf',
-    (gltf2) =>
-    {
-        gltf2.scene.scale.set(0.025, 0.025, 0.025),
-        gltf2.scene.position.set(3, 0, 0),
-        scene.add(gltf2.scene)
-
-        mixer2 = new THREE.AnimationMixer(gltf2.scene)
-        const action = mixer2.clipAction(gltf2.animations[1])
-
-        action.play()
-    }
-)
-gltfLoader.load(
-    '/models/Fox/glTF/Fox.gltf',
-    (gltf3) =>
-    {
-        gltf3.scene.scale.set(0.025, 0.025, 0.025),
-        gltf3.scene.position.set(- 3, 0, 0),
-        scene.add(gltf3.scene)
-
-        mixer3 = new THREE.AnimationMixer(gltf3.scene)
-        const action = mixer3.clipAction(gltf3.animations[2])
-
-        action.play()
     }
 )
 
@@ -113,7 +40,7 @@ gltfLoader.load(
  * Floor
  */
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
+    new THREE.PlaneGeometry(50, 50),
     new THREE.MeshStandardMaterial({
         color: '#444444',
         metalness: 0,
@@ -169,12 +96,12 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(2, 2, 2)
+camera.position.set(- 8, 4, 8)
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
-controls.target.set(0, 0.75, 0)
+controls.target.set(0, 1, 0)
 controls.enableDamping = true
 
 /**
@@ -200,15 +127,9 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
-    // Update mixer
-    if(mixer !== null){
+    if(mixer)
+    {
         mixer.update(deltaTime)
-    }
-    if(mixer2 !== null){
-        mixer2.update(deltaTime)
-    }
-    if(mixer3 !== null){
-        mixer3.update(deltaTime)
     }
 
     // Update controls
