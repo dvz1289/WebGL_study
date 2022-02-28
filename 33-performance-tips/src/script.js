@@ -1,6 +1,16 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import Stats from 'stats.js'
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+
+/**
+ * Stats
+ */
+
+const stats = new Stats()
+stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom)
 
 /**
  * Base
@@ -66,6 +76,7 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(window.devicePixelRatio)
 
 /**
+ * 
  * Test meshes
  */
 const cube = new THREE.Mesh(
@@ -122,6 +133,8 @@ const clock = new THREE.Clock()
 
 const tick = () =>
 {
+    stats.begin()
+
     const elapsedTime = clock.getElapsedTime()
 
     // Update test mesh
@@ -135,6 +148,8 @@ const tick = () =>
 
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
+
+    stats.end()
 }
 
 tick()
@@ -197,44 +212,35 @@ tick()
 // }
 
 // // Tip 19
+// const geometries = []
 // for(let i = 0; i < 50; i++)
 // {
 //     const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 
-//     const material = new THREE.MeshNormalMaterial()
-    
-//     const mesh = new THREE.Mesh(geometry, material)
-//     mesh.position.x = (Math.random() - 0.5) * 10
-//     mesh.position.y = (Math.random() - 0.5) * 10
-//     mesh.position.z = (Math.random() - 0.5) * 10
-//     mesh.rotation.x = (Math.random() - 0.5) * Math.PI * 2
-//     mesh.rotation.y = (Math.random() - 0.5) * Math.PI * 2
+//     geometry.rotateX((Math.random() - 0.5) * Math.PI * 2)
+//     geometry.rotateY((Math.random() - 0.5) * Math.PI * 2)
 
-//     scene.add(mesh)
+//     geometry.translate(
+//         (Math.random() - 0.5) * 10,
+//         (Math.random() - 0.5) * 10,
+//         (Math.random() - 0.5) * 10
+//     )
+
+//     geometries.push(geometry)
 // }
+
+// const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometries)
+// console.log(mergedGeometry)
+
+// const material = new THREE.MeshNormalMaterial()
+
+// const mesh = new THREE.Mesh(mergedGeometry, material)
+// scene.add(mesh)
 
 // // Tip 20
 // const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-    
-// for(let i = 0; i < 50; i++)
-// {
-//     const material = new THREE.MeshNormalMaterial()
+// const material = new THREE.MeshNormalMaterial()    
 
-//     const mesh = new THREE.Mesh(geometry, material)
-//     mesh.position.x = (Math.random() - 0.5) * 10
-//     mesh.position.y = (Math.random() - 0.5) * 10
-//     mesh.position.z = (Math.random() - 0.5) * 10
-//     mesh.rotation.x = (Math.random() - 0.5) * Math.PI * 2
-//     mesh.rotation.y = (Math.random() - 0.5) * Math.PI * 2
-
-//     scene.add(mesh)
-// }
-
-// // Tip 22
-// const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-
-// const material = new THREE.MeshNormalMaterial()
-    
 // for(let i = 0; i < 50; i++)
 // {
 //     const mesh = new THREE.Mesh(geometry, material)
@@ -246,6 +252,23 @@ tick()
 
 //     scene.add(mesh)
 // }
+
+// Tip 22
+const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+
+const material = new THREE.MeshNormalMaterial()
+    
+for(let i = 0; i < 50; i++)
+{
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.position.x = (Math.random() - 0.5) * 10
+    mesh.position.y = (Math.random() - 0.5) * 10
+    mesh.position.z = (Math.random() - 0.5) * 10
+    mesh.rotation.x = (Math.random() - 0.5) * Math.PI * 2
+    mesh.rotation.y = (Math.random() - 0.5) * Math.PI * 2
+
+    scene.add(mesh)
+}
 
 // // Tip 29
 // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -264,7 +287,6 @@ tick()
 //         uniform float uDisplacementStrength;
 
 //         varying vec2 vUv;
-
 //         void main()
 //         {
 //             vec4 modelPosition = modelMatrix * vec4(position, 1.0);
